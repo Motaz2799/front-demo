@@ -40,7 +40,7 @@
 </template>
 
 <script>
-import axios from 'axios'
+//import this.$http from 'this.$http'
 import Datatable from '@/components/Datatable.vue'
 import Footer from '@/components/Footer.vue'
 import Navbar from '@/components/Navbar.vue'
@@ -69,7 +69,7 @@ export default {
     }
   },
   mounted() {
-    axios
+    this.$http
       .get(` http://localhost:8080/api/v1/interfaces`)
       .then((response) => {
         const totalItems = response.data.length

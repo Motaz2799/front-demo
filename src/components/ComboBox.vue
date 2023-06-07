@@ -2,7 +2,6 @@
   <div>
     <div class="btn-group" ref="dropdown">
       <button
-
         type="button"
         class="btn btn-secondary dropdown-toggle"
         :class="{ 'dropdown-open': isOpen, 'multiple-selection': multiple }"
@@ -10,8 +9,6 @@
         data-bs-toggle="dropdown"
         aria-expanded="false"
       >
-      
-      
         <template v-if="selectedOptionName && selectedOptionName.length > 0">
           {{ selectedOptionName.slice(0, 3).join(', ') }}
           <template v-if="selectedOptionName.length > 3">
@@ -23,8 +20,7 @@
         </template>
       </button>
 
-      
-      <div  class="dropdown-menu dropdown-menu-scrollable" >
+      <div class="dropdown-menu dropdown-menu-scrollable">
         <div class="input-group fixed-top">
           <span class="input-group-text" id="search-icon">
             <i class="bi bi-search"></i>
@@ -165,15 +161,15 @@ export default {
         this.selectedOptions = [option]
         this.selectedOptionName = option ? [option.name] : []
         this.$emit('option-selected', option)
-        
       }
     },
     toggleDropdown() {
-      if(this.multiple){this.isOpen = !this.isOpen}
-      else{this.isOpen = false}
-      
+      if (this.multiple) {
+        this.isOpen = !this.isOpen
+      } else {
+        this.isOpen = false
+      }
     }
-   
   }
 }
 </script>

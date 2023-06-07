@@ -39,7 +39,7 @@
 <script>
 import Navbar from '@/components/Navbar.vue'
 import Footer from '@/components/Footer.vue'
-import axios from 'axios'
+//import this.$http from 'this.$http'
 
 export default {
   components: {
@@ -68,7 +68,7 @@ export default {
     startUpload() {
       this.loading = true
       console.log(this.formData)
-      axios({
+      this.$http({
         url: 'http://localhost:5000/api/v1/upload',
         method: 'POST',
         data: this.formData,

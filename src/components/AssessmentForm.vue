@@ -145,7 +145,7 @@
   </div>
 </template>
 <script>
-import axios from 'axios'
+//import this.$http from 'this.$http'
 export default {
   name: 'AssessmentForm',
 
@@ -167,7 +167,7 @@ export default {
         const url = `http://localhost:8080/api/v1/responses/${this.appId}/question/${id}`
         const data = { response: this.formResponse[id].toString() }
         console.log(data.response)
-        axios
+        this.$http
           .post(url, data)
           .then((response) => console.log(response))
           .catch((error) => console.error(error))
@@ -177,7 +177,7 @@ export default {
       const url = `http://localhost:8080/api/v1/responses/${this.appId}/question/${id}`
       const data = { response: this.formResponse[id].toString() }
       console.log(data.response)
-      axios
+      this.$http
         .post(url, data)
         .then((response) => console.log(response))
         .catch((error) => console.error(error))

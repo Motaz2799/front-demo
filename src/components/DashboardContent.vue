@@ -38,7 +38,7 @@
   </div>
 </template>
 <script>
-import axios from 'axios'
+//import this.$http from 'this.$http'
 import Modal from '@/components/Modal.vue'
 import NewDataTable from '@/components/NewDataTable.vue'
 export default {

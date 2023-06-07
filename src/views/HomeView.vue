@@ -38,22 +38,25 @@
             <div class="col-md-4">
               <h3 class="text-primary">Welcome back</h3>
 
-              <form action="https://demo.oba.tn/login" method="post" accept-charset="utf-8">
+              <form @submit="login">
                 <input
                   type="hidden"
                   id="token"
                   name="csrf_app"
                   value="d31ab597f09de740ac84097b48729f0e"
+                  
                 />
 
                 <div class="form-group">
-                  <label for="exampleFormControlInput1">E-Mail Address </label>
+                  <label for="exampleFormControlInput1" >E-Mail Address </label>
                   <input
                     type="text"
                     name="userName"
-                    id="user"
+                    
                     class="input form-control"
-                    value=""
+                   
+                    v-model="email"
+                    
                   />
                 </div>
                 <div class="form-group">
@@ -61,13 +64,20 @@
                   <input
                     type="password"
                     name="password"
-                    id="pass"
                     class="input form-control"
-                    value=""
+                    v-model="password"
                   />
                 </div>
+                
+<div class="alert alert-warning" role="alert" v-if="message" >
+  <span class="alert-icon"><span class="visually-hidden">Success</span></span>
+  <p>{{message}}</p>
+</div>
+
+
                 <br />
-                <my-button @clicked="goToClickedView">Log In</my-button>
+                <button type="submit" class="btn loginButtonSubmit btn-primary">Login</button>
+                
               </form>
             </div>
 
@@ -88,19 +98,62 @@
 </template>
 
 <script>
-import MyButton from '@/components/MyButton.vue'
+//import MyButton from '@/components/MyButton.vue'
 import Footer from '../components/Footer.vue'
+import axios from 'axios';
 export default {
+  data() {
+    return {
+      email: '',
+      password: '',
+      message: ''
+    }
+  },
   components: {
-    MyButton,
+    //MyButton,
     Footer
   },
   methods: {
-    goToClickedView() {
-      this.$router.push('/applications')
+      login(event) {
+        event.preventDefault();
+        this.message = '';
+
+      if (!this.email || !this.password) {
+        this.message = 'Please enter both your email and password.';
+        return;
+      }
+  
+        axios.post('http://localhost:8080/api/v1/auth/authenticate', {
+          email: this.email,
+          password: this.password
+        })
+        .then(response => {
+          const token = response.data.token;
+  
+          // Store the token in localStorage
+          localStorage.setItem('token', token);
+  
+          // Set authorization header for all Axios requests
+          axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+  
+          // Redirect to '/applications' route
+          this.$router.push('/applications');
+          
+        })
+        .catch(error => {
+          if (error.response && error.response.status === 403) {
+          this.message = 'Incorrect username or password.';
+        } else {
+          this.message = 'Login failed. Please try again later.';
+        }
+        
+
+    
+        console.error('Login failed:', error);
+      });
+      }
     }
-  }
-}
+  };
 </script>
 
 <style scoped>
@@ -120,3 +173,5 @@ export default {
   margin-bottom: 60px; /* Set a margin to prevent content from being hidden behind the footer */
 }
 </style>
+
+

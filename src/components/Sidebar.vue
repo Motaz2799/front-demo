@@ -1,7 +1,13 @@
 <template>
   <div class="flex-shrink-0 p-3 bg-white" style="width: 280px">
     <a class="d-flex align-items-center pb-3 mb-3 text-decoration-none border-bottom">
-      <span type="button" class="fs-5 fw-semibold" @click="handleLinkClick('Landing')" title="Return to main dashbord">{{ appName }}</span>
+      <span
+        type="button"
+        class="fs-5 fw-semibold"
+        @click="handleLinkClick('Landing')"
+        title="Return to main dashbord"
+        >{{ appName }}</span
+      >
     </a>
     <ul class="list-unstyled ps-0">
       <li class="mb-1">
@@ -48,18 +54,33 @@
               <div class="collapse" id="category-collapse" v-if="currentStepIndex === index + 1">
                 <ul v-if="showCategories" class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
                   <li v-for="(category, index) in step.categories" :key="category.id">
-                    <a v-if="category.isCompleted" @click="onCategoryChange(index)" class="rounded alert alert-success alert-sm" role="alert" style=" border: none;">
-                      <span type="button" class=" sr-only alert-icon" ><span class=" sr-only visually-hidden">Success</span></span>
+                    <a
+                      v-if="category.isCompleted"
+                      @click="onCategoryChange(index)"
+                      class="rounded alert alert-success alert-sm"
+                      role="alert"
+                      style="border: none"
+                    >
+                      <span type="button" class="sr-only alert-icon"
+                        ><span class="sr-only visually-hidden">Success</span></span
+                      >
                       {{ category.category }}
                     </a>
-                    <a v-else @click="onCategoryChange(index)" class="rounded alert alert-warning alert-sm" role="alert" style=" border: none;">
-                      <span type="button" class="sr-only alert-icon" ><span class="sr-only visually-hidden">Warning</span></span>
+                    <a
+                      v-else
+                      @click="onCategoryChange(index)"
+                      class="rounded alert alert-warning alert-sm"
+                      role="alert"
+                      style="border: none"
+                    >
+                      <span type="button" class="sr-only alert-icon"
+                        ><span class="sr-only visually-hidden">Warning</span></span
+                      >
                       {{ category.category }}
                     </a>
                   </li>
                 </ul>
               </div>
-
             </li>
           </ul>
         </div>
@@ -69,7 +90,7 @@
 </template>
 
 <script>
-import axios from 'axios'
+//import this.$http from 'this.$http'
 export default {
   name: 'Sidebar',
   data() {
@@ -121,15 +142,15 @@ export default {
       }
     },
     async fetchAssessments() {
-      const response = await axios.get(`http://localhost:8080/api/v1/assessments`)
+      const response = await this.$http.get(`http://localhost:8080/api/v1/assessments`)
       this.assessments = response.data
       console.log(response.data)
     },
     async fetchSteps(id) {
       try {
-        const response = await axios.get(`http://localhost:8080/api/v1/applications/${id}`)
+        const response = await this.$http.get(`http://localhost:8080/api/v1/applications/${id}`)
         this.currentAppName = response.data.appName
-        const response1 = await axios.get(
+        const response1 = await this.$http.get(
           `http://localhost:8080/api/v1/applications/${id}/assessment`
         )
         if (!response1.data) {

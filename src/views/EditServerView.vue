@@ -71,7 +71,7 @@
 <script>
 import Navbar from '@/components/Navbar.vue'
 import Footer from '@/components/Footer.vue'
-import axios from 'axios'
+//import this.$http from 'this.$http'
 import ComboBox from '../components/ComboBox.vue'
 
 const FORM_CONFIGS = {
@@ -147,7 +147,7 @@ export default {
     this.endpoint = 'http://localhost:8080/api/v1/servers'
   },
   mounted() {
-    axios.get('http://localhost:8080/api/v1/environments/non-archived').then((response) => {
+    this.$http.get('http://localhost:8080/api/v1/environments/non-archived').then((response) => {
       const Environments = response.data.map((environment) => {
         return {
           id: environment.id,
@@ -156,7 +156,7 @@ export default {
       })
       this.environments = Environments
     }),
-      axios.get('http://localhost:8080/api/v1/datacenters/non-archived').then((response) => {
+      this.$http.get('http://localhost:8080/api/v1/datacenters/non-archived').then((response) => {
         const DCs = response.data.map((datacenter) => {
           return {
             id: datacenter.id,
@@ -167,7 +167,7 @@ export default {
       })
 
     if (this.idServ !== 0) {
-      axios
+      this.$http
         .get(`${this.endpoint}/${this.idServ}`)
         .then((response) => {
           this.formData = response.data
@@ -190,7 +190,7 @@ export default {
 
   methods: {
     loadData(idDb) {
-      axios
+      this.$http
         .get(`${this.endpoint}/${idDb}`)
         .then((response) => {
           this.formData = response.data
@@ -212,10 +212,10 @@ export default {
     envDcAdd(resp, dcId, envId) {
       return new Promise((resolve) => {
         if (dcId && envId) {
-          axios
+          this.$http
             .put(`http://localhost:8080/api/v1/servers/${resp}/datacenter/link/${dcId}`)
             .then(() => {
-              axios
+              this.$http
                 .put(`http://localhost:8080/api/v1/servers/${resp}/environment/link/${envId}`)
                 .then(() => {
                   resolve()
@@ -224,11 +224,11 @@ export default {
             })
             .catch(console.error)
         } else if (dcId) {
-          axios
+          this.$http
             .put(`http://localhost:8080/api/v1/servers/${resp}/datacenter/link/${dcId}`)
             .catch(console.error)
         } else if (envId) {
-          axios
+          this.$http
             .put(`http://localhost:8080/api/v1/servers/${resp}/environment/link/${envId}`)
             .catch(console.error)
         } else {
@@ -236,63 +236,59 @@ export default {
         }
       })
     },
-    submitForm(){
+    submitForm() {
       for (const field of this.formFields) {
         if (field.required && !this.formData[field.name]) {
-          
           const errorMessage = `<div class="alert alert-danger" role="alert" >
       <span class="alert-icon"><span class="visually-hidden">Warning</span></span>
       <p style="font-weight:500; height:8px;">${field.label} is required</p>
-    </div>`;
-      document.getElementById('errorContainerEditServer').innerHTML = errorMessage;
-          
+    </div>`
+          document.getElementById('errorContainerEditServer').innerHTML = errorMessage
+
           return false
         }
       }
       return true
     },
     submitFormServer() {
-      
       if (this.submitForm()) {
         if (this.selectedDataCenter !== 0 && this.selectedEnvironment !== 0) {
-        this.envDcAdd(this.idServ, this.selectedDataCenter, this.selectedEnvironment)
-          .then(() => {
-            this.formData.datacenter = this.datacenters.find(
-              (dc) => dc.id === this.selectedDataCenter
-            )
-            this.formData.environment = this.environments.find(
-              (env) => env.id === this.selectedEnvironment
-            )
-            axios
-              .put(`${this.endpoint}/${this.idServ}`, this.formData)
-              .then((response) => {
-                console.log(response.data)
-                alert('Server ' + this.formData.serverName + ' has been updated')
-                window.location.reload()
-                this.$router.push({ path: '/servers' })
-              })
-              .catch((error) => {
-                console.log(error)
-              })
-          })
-          .catch((error) => {
-            console.log(error)
-          })
-      } else {
-        axios
-          .put(`${this.endpoint}/${this.idServ}`, this.formData)
-          .then((response) => {
-            console.log(response.data)
-            alert('Server ' + this.formData.serverName + ' has been updated')
-            window.location.reload()
-            this.$router.push({ path: '/servers' })
-          })
-          .catch((error) => {
-            console.log(error)
-          })
-      }
-
-      
+          this.envDcAdd(this.idServ, this.selectedDataCenter, this.selectedEnvironment)
+            .then(() => {
+              this.formData.datacenter = this.datacenters.find(
+                (dc) => dc.id === this.selectedDataCenter
+              )
+              this.formData.environment = this.environments.find(
+                (env) => env.id === this.selectedEnvironment
+              )
+              this.$http
+                .put(`${this.endpoint}/${this.idServ}`, this.formData)
+                .then((response) => {
+                  console.log(response.data)
+                  alert('Server ' + this.formData.serverName + ' has been updated')
+                  window.location.reload()
+                  this.$router.push({ path: '/servers' })
+                })
+                .catch((error) => {
+                  console.log(error)
+                })
+            })
+            .catch((error) => {
+              console.log(error)
+            })
+        } else {
+          this.$http
+            .put(`${this.endpoint}/${this.idServ}`, this.formData)
+            .then((response) => {
+              console.log(response.data)
+              alert('Server ' + this.formData.serverName + ' has been updated')
+              window.location.reload()
+              this.$router.push({ path: '/servers' })
+            })
+            .catch((error) => {
+              console.log(error)
+            })
+        }
       }
     },
     onDatacenterSelected(selectedOption) {

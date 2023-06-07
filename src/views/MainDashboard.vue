@@ -1,28 +1,33 @@
 <template>
   <Navbar></Navbar>
   <div class="row">
-    <div class="col-md-3 col-lg-3" >
+    <div class="col-md-3 col-lg-3">
       <Sidebar
         :appName="applicationName"
         @linkClicked="handleLinkClicked"
         @categoryChanged="handlecategoryChanged"
       ></Sidebar>
     </div>
-    <div class="col-md-9 col-lg-9">    <div
-      v-if="selectedLink === 'Assessment' || Object.keys(categoryToshow).length !== 0">
-      <AssessmentForm :currentCategory="categoryToshow" :appId="appId" />
+    <div class="col-md-9 col-lg-9">
+      <div v-if="selectedLink === 'Assessment' || Object.keys(categoryToshow).length !== 0">
+        <AssessmentForm :currentCategory="categoryToshow" :appId="appId" />
+      </div>
+      <div v-else-if="selectedLink === 'Landing'">
+        <landingDashboard :id="appId" :appName="applicationName"></landingDashboard>
+      </div>
+      <div v-else>
+        <DashboardContent
+          :selectedLink="selectedLink"
+          :id="appId"
+          :appName="applicationName"
+        ></DashboardContent>
+      </div>
     </div>
-    <div v-else-if="selectedLink === 'Landing'">
-      <landingDashboard :id="appId" :appName="applicationName"></landingDashboard>
-    </div>
-    <div v-else >
-      <DashboardContent :selectedLink="selectedLink" :id="appId" :appName="applicationName"></DashboardContent>
-    </div></div>
   </div>
   <Footer></Footer>
 </template>
 <script>
-import axios from 'axios'
+//import this.$http from 'this.$http'
 import DashboardContent from '@/components/DashboardContent.vue'
 import landingDashboard from '../components/landingDashboard.vue'
 import Sidebar from '@/components/Sidebar.vue'
@@ -34,7 +39,8 @@ export default {
   components: {
     DashboardContent,
     Sidebar,
-    Navbar,Footer,
+    Navbar,
+    Footer,
     AssessmentForm,
     landingDashboard
   },
@@ -54,7 +60,7 @@ export default {
       const id = this.$route.params.id
       this.appId = id
       console.log(id + ' is the id')
-      axios
+      this.$http
         .get(`http://localhost:8080/api/v1/applications/${id}`)
         .then((response) => {
           this.applicationName = response.data.appName

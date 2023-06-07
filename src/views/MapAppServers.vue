@@ -1,6 +1,5 @@
 <template>
   <div>
-    
     <div class="container my-3 mx-0">
       <div class="container">
         <div id="errorContainer"></div>
@@ -50,11 +49,8 @@
 <script>
 import Navbar from '@/components/Navbar.vue'
 import Footer from '@/components/Footer.vue'
-import axios from 'axios'
+//import this.$http from 'this.$http'
 import ComboBox from '../components/ComboBox.vue'
-
-
-
 
 export default {
   components: {
@@ -90,7 +86,7 @@ export default {
     }
   },
   created() {
-    axios.get('http://localhost:8080/api/v1/servers/all').then((response) => {
+    this.$http.get('http://localhost:8080/api/v1/servers/all').then((response) => {
       const Servs = response.data.map((server) => {
         return {
           id: server.id,
@@ -99,7 +95,7 @@ export default {
       })
       this.servers = Servs
     })
-    axios.get('http://localhost:8080/api/v1/contacts/non-archived').then((response) => {
+    this.$http.get('http://localhost:8080/api/v1/contacts/non-archived').then((response) => {
       const Contacts = response.data.map((contact) => {
         return {
           id: contact.id,
@@ -121,7 +117,7 @@ export default {
       if (this.submitForm() == true) {
         if (this.selectedServers.length === 0) {
           if (this.selectedContacts.length === 0) {
-            axios
+            this.$http
               .post('http://localhost:8080/api/v1/applications', this.responseApplication, {
                 headers: {
                   'Content-Type': 'application/json'
@@ -137,7 +133,7 @@ export default {
                 console.error(error)
               })
           } else {
-            axios
+            this.$http
               .post('http://localhost:8080/api/v1/applications', this.responseApplication, {
                 headers: {
                   'Content-Type': 'application/json'
@@ -147,7 +143,7 @@ export default {
                 const appID = response.data.id
                 this.selectedContacts.forEach((contact) => {
                   const contactId = contact.id
-                  axios
+                  this.$http
                     .put(
                       `http://localhost:8080/api/v1/applications/${appID}/contact/link/${contactId}`,
                       this.responseApplication,
@@ -167,7 +163,7 @@ export default {
           }
         } else {
           if (this.selectedContacts.length === 0) {
-            axios
+            this.$http
               .post('http://localhost:8080/api/v1/applications', this.responseApplication, {
                 headers: {
                   'Content-Type': 'application/json'
@@ -177,7 +173,7 @@ export default {
                 const appID = response.data.id
                 this.selectedServers.forEach((server) => {
                   const serverId = server.id
-                  axios
+                  this.$http
                     .put(
                       `http://localhost:8080/api/v1/applications/${appID}/server/link/${serverId}`,
                       this.responseApplication,
@@ -194,7 +190,7 @@ export default {
                 this.$router.push('/applications')
               })
           } else {
-            axios
+            this.$http
               .post('http://localhost:8080/api/v1/applications', this.responseApplication, {
                 headers: {
                   'Content-Type': 'application/json'
@@ -204,7 +200,7 @@ export default {
                 const applicationID = response.data.id
                 this.selectedServers.forEach((server) => {
                   const serverId = server.id
-                  axios.put(
+                  this.$http.put(
                     `http://localhost:8080/api/v1/applications/${applicationID}/server/link/${serverId}`,
                     this.responseApplication,
                     { headers: { 'Content-Type': 'application/json' } }
@@ -212,7 +208,7 @@ export default {
                 })
                 this.selectedContacts.forEach((contact) => {
                   const contactId = contact.id
-                  axios
+                  this.$http
                     .put(
                       `http://localhost:8080/api/v1/applications/${applicationID}/contact/link/${contactId}`,
                       this.responseApplication,
@@ -239,13 +235,12 @@ export default {
       // Check if required fields are empty
       for (const field of this.formFields) {
         if (field.required && !this.formData[field.name]) {
-          
           const errorMessage = `<div class="alert alert-danger" role="alert" >
       <span class="alert-icon"><span class="visually-hidden">Warning</span></span>
       <p style="font-weight:500; height:8px;">${field.label} is required</p>
-    </div>`;
-      document.getElementById('errorContainer').innerHTML = errorMessage;
-          
+    </div>`
+          document.getElementById('errorContainer').innerHTML = errorMessage
+
           return false
         }
       }

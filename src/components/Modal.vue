@@ -108,7 +108,7 @@
 import ComboBox from './ComboBox.vue'
 import InterfaceConfig from './InterfaceConfiguration.vue'
 
-import axios from 'axios'
+//import this.$http from 'this.$http'
 import AddServer from './AddServer.vue'
 export default {
   props: {
@@ -132,7 +132,7 @@ export default {
     }
   },
   mounted() {
-    axios
+    this.$http
       .get(`http://localhost:8080/api/v1/applications/${this.id}/non-linked-servers`)
       .then((response) => {
         const servers = response.data.map((server) => {
@@ -147,7 +147,7 @@ export default {
         console.log(error)
       })
 
-    axios
+    this.$http
       .get(`http://localhost:8080/api/v1/applications/${this.id}/non-linked-databases`)
       .then((response) => {
         const databases = response.data.map((database) => {
@@ -182,7 +182,7 @@ export default {
         this.selectedServers.forEach((server) => {
           const serverId = server
           console.log(serverId)
-          axios
+          this.$http
             .put(
               `http://localhost:8080/api/v1/applications/${this.id}/server/link2/${serverId}`,
 
@@ -195,7 +195,7 @@ export default {
             .then(() => {
               alert('Resource added successfully!')
               window.location.reload()
-                })
+            })
             .catch((error) => {
               console.error(error)
             })

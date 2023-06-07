@@ -41,7 +41,7 @@
 <script>
 import Navbar from '@/components/Navbar.vue'
 import Footer from '@/components/Footer.vue'
-import axios from 'axios'
+//import this.$http from 'this.$http'
 
 const FORM_CONFIGS = {
   applicationsView: [
@@ -101,7 +101,7 @@ export default {
   methods: {
     loadData(idApp) {
       if (idApp !== 0) {
-        axios
+        this.$http
           .get(`${this.endpoint}/${idApp}`)
           .then((response) => {
             this.formData = response.data
@@ -111,16 +111,15 @@ export default {
           })
       }
     },
-    submitForm(){
+    submitForm() {
       for (const field of this.formFields) {
         if (field.required && !this.formData[field.name]) {
-          
           const errorMessage = `<div class="alert alert-danger" role="alert" >
       <span class="alert-icon"><span class="visually-hidden">Warning</span></span>
       <p style="font-weight:500; height:8px;">${field.label} is required</p>
-    </div>`;
-      document.getElementById('errorContainerEditApp').innerHTML = errorMessage;
-          
+    </div>`
+          document.getElementById('errorContainerEditApp').innerHTML = errorMessage
+
           return false
         }
       }
@@ -128,19 +127,18 @@ export default {
     },
     submitFormApp() {
       if (this.submitForm()) {
-        axios
-        .put(`${this.endpoint}/${this.idApp}`, this.formData)
-        .then((response) => {
-          console.log(response.data)
-          alert('Application' + this.formData.appName + 'has been updated')
-          window.location.reload()
-          this.$router.push({ path: '/Applications' })
-        })
-        .catch((error) => {
-          console.log(error)
-        })
+        this.$http
+          .put(`${this.endpoint}/${this.idApp}`, this.formData)
+          .then((response) => {
+            console.log(response.data)
+            alert('Application' + this.formData.appName + 'has been updated')
+            window.location.reload()
+            this.$router.push({ path: '/Applications' })
+          })
+          .catch((error) => {
+            console.log(error)
+          })
       }
-      
     }
   }
 }

@@ -40,7 +40,7 @@
 <script>
 import Navbar from '@/components/Navbar.vue'
 import Footer from '@/components/Footer.vue'
-import axios from 'axios'
+//import this.$http from 'this.$http'
 
 const FORM_CONFIGS = {
   applicationsView: [
@@ -112,7 +112,7 @@ export default {
           query: { formData: JSON.stringify(this.formData) } // add form data to query parameter
         })
       } else if (this.endpoint === 'http://localhost:8080/api/v1/databases') {
-        axios
+        this.$http
           .post(this.endpoint, this.formData)
           .then((response) => {
             console.log(response.data)

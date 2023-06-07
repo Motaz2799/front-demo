@@ -36,61 +36,70 @@
               type="button"
               data-bs-toggle="modal"
               data-bs-target="#exampleModalToggleApplication"
-              >Via form</a>
+              >Via form</a
+            >
             <a
               v-else-if="button === 'Add Server'"
               class="dropdown-item"
               type="button"
               data-bs-toggle="modal"
               data-bs-target="#exampleModalToggleServer"
-              >Via form</a>
-              <a
+              >Via form</a
+            >
+            <a
               v-else-if="button === 'Add Contacts'"
               class="dropdown-item"
               type="button"
               data-bs-toggle="modal"
               data-bs-target="#exampleModalToggleContact"
-              >Via form</a>
-              <a
+              >Via form</a
+            >
+            <a
               v-else-if="button === 'Add Interface'"
               class="dropdown-item"
               type="button"
               data-bs-toggle="modal"
               data-bs-target="#exampleModalToggleInterface"
-              >Via form</a>
-              <a
+              >Via form</a
+            >
+            <a
               v-else-if="button === 'Add Datacenter'"
               class="dropdown-item"
               type="button"
               data-bs-toggle="modal"
               data-bs-target="#exampleModalToggleDatacenter"
-              >Via form</a>
-              <a
+              >Via form</a
+            >
+            <a
               v-else-if="button === 'Add Environments'"
               class="dropdown-item"
               type="button"
               data-bs-toggle="modal"
               data-bs-target="#exampleModalToggleEnv"
-              >Via form</a>
-             </li>
+              >Via form</a
+            >
+          </li>
         </ul>
       </div>
     </caption>
 
-    
-      <input
-        type="text"
-        class="form-control"
-        placeholder="Live Search..."
-        v-model="searchQuery"
-        style="width: 204px; height: 35px"
-      />
-    
+    <input
+      type="text"
+      class="form-control"
+      placeholder="Live Search..."
+      v-model="searchQuery"
+      style="width: 204px; height: 35px"
+    />
 
     <table id="sortable" class="table table-hover tablesorter">
       <thead>
         <tr>
-          <th class="cursor" v-for="(column, index) in visibleColumns" :key="index" @click="sortBy(column.name)">
+          <th
+            class="cursor"
+            v-for="(column, index) in visibleColumns"
+            :key="index"
+            @click="sortBy(column.name)"
+          >
             {{ column.label }}
             <span
               v-if="sortColumn === column.name"
@@ -126,10 +135,17 @@
       </thead>
       <tbody>
         <tr v-for="row in filteredData" v-bind:key="row.id">
-          <td v-if="button==='Add Application'" class="cursor" v-for="(column, index) in visibleColumns" :key="index" @click="goToDashbord(row.id)" title="Click to view dashboard application">
+          <td
+            v-if="button === 'Add Application'"
+            class="cursor"
+            v-for="(column, index) in visibleColumns"
+            :key="index"
+            @click="goToDashbord(row.id)"
+            title="Click to view dashboard application"
+          >
             {{ row[column.name] }}
           </td>
-          <td v-else class="cursor" v-for="(column, index) in visibleColumns" :key="index+1">
+          <td v-else class="cursor" v-for="(column, index) in visibleColumns" :key="index + 1">
             {{ row[column.name] }}
           </td>
           <td>
@@ -145,56 +161,63 @@
               </button>
               <ul class="dropdown-menu">
                 <li><a class="dropdown-item" @click="deleteRessource(row.id)">Delete</a></li>
-                  <li><a
-              v-if="button === 'Add Database'"
-              @click="setIdDB(row.id)"
-              class="dropdown-item"
-              data-bs-toggle="modal"
-              data-bs-target="#exampleModalToggleEditDB"
-              >Edit</a>
-              <a
-              v-else-if="button === 'Add Server'"
-              @click="setIdServer(row.id)"
-              class="dropdown-item"
-              data-bs-toggle="modal"
-              data-bs-target="#exampleModalToggleEditServer"
-              >Edit</a>
-              <a
-              v-else-if="button === 'Add Contacts'"
-              @click="setIdContact(row.id)"
-              class="dropdown-item"
-              data-bs-toggle="modal"
-              data-bs-target="#exampleModalToggleEditContact"
-              >Edit</a>
-              <a
-              v-else-if="button === 'Add Interface'"
-              @click="setIdInterface(row.id)"
-              class="dropdown-item"
-              data-bs-toggle="modal"
-              data-bs-target="#exampleModalToggleEditInterface"
-              >Edit</a>
-              <a
-              v-else-if="button === 'Add Datacenter'"
-              @click="setIdDatacenter(row.id)"
-              class="dropdown-item"
-              data-bs-toggle="modal"
-              data-bs-target="#exampleModalToggleEditDatacenter"
-              >Edit</a>
-              <a
-              v-else-if="button === 'Add Environments'"
-              @click="setIdEnv(row.id)"
-              class="dropdown-item"
-              data-bs-toggle="modal"
-              data-bs-target="#exampleModalToggleEditEnv"
-              >Edit</a>
-              <a
-              v-else-if="button === 'Add Application'"
-              @click="setIdApp(row.id)"
-              class="dropdown-item"
-              data-bs-toggle="modal"
-              data-bs-target="#exampleModalToggleEditApp"
-              >Edit</a>
-
+                <li>
+                  <a
+                    v-if="button === 'Add Database'"
+                    @click="setIdDB(row.id)"
+                    class="dropdown-item"
+                    data-bs-toggle="modal"
+                    data-bs-target="#exampleModalToggleEditDB"
+                    >Edit</a
+                  >
+                  <a
+                    v-else-if="button === 'Add Server'"
+                    @click="setIdServer(row.id)"
+                    class="dropdown-item"
+                    data-bs-toggle="modal"
+                    data-bs-target="#exampleModalToggleEditServer"
+                    >Edit</a
+                  >
+                  <a
+                    v-else-if="button === 'Add Contacts'"
+                    @click="setIdContact(row.id)"
+                    class="dropdown-item"
+                    data-bs-toggle="modal"
+                    data-bs-target="#exampleModalToggleEditContact"
+                    >Edit</a
+                  >
+                  <a
+                    v-else-if="button === 'Add Interface'"
+                    @click="setIdInterface(row.id)"
+                    class="dropdown-item"
+                    data-bs-toggle="modal"
+                    data-bs-target="#exampleModalToggleEditInterface"
+                    >Edit</a
+                  >
+                  <a
+                    v-else-if="button === 'Add Datacenter'"
+                    @click="setIdDatacenter(row.id)"
+                    class="dropdown-item"
+                    data-bs-toggle="modal"
+                    data-bs-target="#exampleModalToggleEditDatacenter"
+                    >Edit</a
+                  >
+                  <a
+                    v-else-if="button === 'Add Environments'"
+                    @click="setIdEnv(row.id)"
+                    class="dropdown-item"
+                    data-bs-toggle="modal"
+                    data-bs-target="#exampleModalToggleEditEnv"
+                    >Edit</a
+                  >
+                  <a
+                    v-else-if="button === 'Add Application'"
+                    @click="setIdApp(row.id)"
+                    class="dropdown-item"
+                    data-bs-toggle="modal"
+                    data-bs-target="#exampleModalToggleEditApp"
+                    >Edit</a
+                  >
                 </li>
 
                 <li v-if="title === 'List of Applications'">
@@ -334,7 +357,6 @@
         </div>
       </div>
     </div>
-
 
     <div id="showAddServer">
       <div
@@ -485,7 +507,6 @@
         </div>
       </div>
     </div>
-    
 
     <div id="showAddDatacenter">
       <div
@@ -512,7 +533,6 @@
       </div>
     </div>
 
-
     <div id="showEditDatacenter">
       <div
         class="modal fade"
@@ -537,7 +557,6 @@
         </div>
       </div>
     </div>
-
 
     <div id="showAddEnv">
       <div
@@ -564,8 +583,6 @@
       </div>
     </div>
 
-
-    
     <div id="showEditEnv">
       <div
         class="modal fade"
@@ -583,14 +600,13 @@
               </button>
             </div>
             <div class="modal-body">
-              <EditEnv :idEnv="idEnvToEdit" ></EditEnv>
+              <EditEnv :idEnv="idEnvToEdit"></EditEnv>
             </div>
             <div class="modal-footer"></div>
           </div>
         </div>
       </div>
     </div>
-
 
     <div id="showColumns">
       <div
@@ -652,13 +668,25 @@ import EditDatacenter from '../views/EditDataCenterView.vue'
 import EditEnv from '../views/EditEnvironmentView.vue'
 import AddApplication from '../views/MapAppServers.vue'
 import EditApplication from '../views/EditAppView.vue'
-import axios from 'axios'
+//import this.$http from 'this.$http'
 
 export default {
   components: {
     UploadExcel,
-    MapDB,AddServerView,AddContact,AddInterface,AddDatacenter,AddEnv,AddApplication,
-    EditDB,EditServer,EditContact,EditInterface,EditDatacenter,EditEnv,EditApplication
+    MapDB,
+    AddServerView,
+    AddContact,
+    AddInterface,
+    AddDatacenter,
+    AddEnv,
+    AddApplication,
+    EditDB,
+    EditServer,
+    EditContact,
+    EditInterface,
+    EditDatacenter,
+    EditEnv,
+    EditApplication
   },
   name: 'DataTable',
 
@@ -695,13 +723,13 @@ export default {
   data() {
     return {
       data: [],
-      idDbToEdit:0,
-      idServToEdit:0,
-      idDCToEdit:0,
-      idEnvToEdit:0,
-      idAppToEdit:0,
-      idContactToEdit:0,
-      idInterfaceToEdit:0,
+      idDbToEdit: 0,
+      idServToEdit: 0,
+      idDCToEdit: 0,
+      idEnvToEdit: 0,
+      idAppToEdit: 0,
+      idContactToEdit: 0,
+      idInterfaceToEdit: 0,
       sortColumn: '',
       sortDirection: 'asc',
       visibleColumnsNames: [],
@@ -711,7 +739,7 @@ export default {
     }
   },
   created() {
-    axios
+    this.$http
       .get(this.endpoint)
       .then((response) => {
         console.log(response.data)
@@ -764,15 +792,14 @@ export default {
       if (this.searchQuery) {
         filtered = filtered.filter((row) => {
           for (const column of this.visibleColumns) {
-            const cellValue = String(row[column.name]).toLowerCase();
+            const cellValue = String(row[column.name]).toLowerCase()
             if (cellValue.includes(this.searchQuery.toLowerCase())) {
-              return true;
+              return true
             }
           }
-          return false;
-        });
+          return false
+        })
       }
-
 
       if (this.sortColumn) {
         const column = this.columns.find((c) => c.name === this.sortColumn)
@@ -831,7 +858,7 @@ export default {
       if (!confirmed) {
         return
       }
-      axios
+      this.$http
         .delete(this.delete + '/' + id)
         .then(() => {
           window.location.reload()
@@ -879,39 +906,37 @@ export default {
         this.$router.push({ path: `/applications/${id}` })
       }
     },
-    setIdDB(id){
-      this.idDbToEdit=id
+    setIdDB(id) {
+      this.idDbToEdit = id
     },
-    setIdServer(id){
-      this.idServToEdit=id
+    setIdServer(id) {
+      this.idServToEdit = id
     },
-    setIdContact(id){
-      this.idContactToEdit=id
+    setIdContact(id) {
+      this.idContactToEdit = id
     },
-    setIdInterface(id){
-      this.idInterfaceToEdit=id
+    setIdInterface(id) {
+      this.idInterfaceToEdit = id
     },
-    setIdDatacenter(id){
-      this.idDCToEdit=id
+    setIdDatacenter(id) {
+      this.idDCToEdit = id
     },
-    setIdEnv(id){
-      this.idEnvToEdit=id
+    setIdEnv(id) {
+      this.idEnvToEdit = id
     },
-    setIdApp(id){
-      this.idAppToEdit=id
+    setIdApp(id) {
+      this.idAppToEdit = id
     },
-    handleNewData(newData){
+    handleNewData(newData) {
       this.data.push(newData)
     }
-
   }
 }
 </script>
 <style>
- .cursor {
+.cursor {
   cursor: pointer;
 }
-
 
 .input-group {
   margin-bottom: 1rem;

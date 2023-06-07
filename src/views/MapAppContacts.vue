@@ -43,7 +43,7 @@
 <script>
 import Navbar from '@/components/Navbar.vue'
 import Footer from '@/components/Footer.vue'
-import axios from 'axios'
+//import this.$http from 'this.$http'
 import ComboBox from '../components/ComboBox.vue'
 
 export default {
@@ -75,7 +75,7 @@ export default {
     }
   },
   created() {
-    axios
+    this.$http
       .get('http://localhost:8080/api/v1/applications/all')
       .then((response) => {
         const APs = response.data.map((application) => {
@@ -96,7 +96,7 @@ export default {
         this.responseContact = JSON.stringify(this.formData)
         if (this.selectedApplications.length === 0) {
           console.log(this.responseContact)
-          axios
+          this.$http
             .post('http://localhost:8080/api/v1/contacts', this.responseContact, {
               headers: {
                 'Content-Type': 'application/json'
@@ -113,7 +113,7 @@ export default {
             })
         } else {
           console.log(this.responseContact)
-          axios
+          this.$http
             .post('http://localhost:8080/api/v1/contacts', this.responseContact, {
               headers: {
                 'Content-Type': 'application/json'
@@ -123,7 +123,7 @@ export default {
               const contactID = response.data.id
               this.selectedApplications.forEach((application) => {
                 const applicationId = application.id
-                axios
+                this.$http
                   .put(
                     `http://localhost:8080/api/v1/contacts/${contactID}/application/link/${applicationId}`,
                     this.responseContact,
@@ -147,13 +147,12 @@ export default {
       // Check if required fields are empty
       for (const field of this.formFields) {
         if (field.required && !this.formData[field.name]) {
-          
           const errorMessage = `<div class="alert alert-danger" role="alert" >
       <span class="alert-icon"><span class="visually-hidden">Warning</span></span>
       <p style="font-weight:500; height:8px;">${field.label} is required</p>
-    </div>`;
-      document.getElementById('errorContainerContact').innerHTML = errorMessage;
-          
+    </div>`
+          document.getElementById('errorContainerContact').innerHTML = errorMessage
+
           return false
         }
       }

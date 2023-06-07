@@ -46,7 +46,7 @@
 import Navbar from '@/components/Navbar.vue'
 import Footer from '@/components/Footer.vue'
 import ComboBox from '@/components/ComboBox.vue'
-import axios from 'axios'
+//import this.$http from 'this.$http'
 
 export default {
   components: {
@@ -76,7 +76,7 @@ export default {
     }
   },
   mounted() {
-    axios
+    this.$http
       .get('http://localhost:8080/api/v1/servers/all')
       .then((response) => {
         const servers = response.data.map((server) => {
@@ -99,7 +99,7 @@ export default {
       if (this.submitForm() == true) {
         this.responseDatabase = JSON.stringify(this.formData)
         if (this.selectedServers.length === 0) {
-          axios
+          this.$http
             .post('http://localhost:8080/api/v1/databases', this.responseDatabase, {
               headers: {
                 'Content-Type': 'application/json'
@@ -114,7 +114,7 @@ export default {
               console.error(error)
             })
         } else {
-          axios
+          this.$http
             .post('http://localhost:8080/api/v1/databases', this.responseDatabase, {
               headers: {
                 'Content-Type': 'application/json'
@@ -124,7 +124,7 @@ export default {
               const DbID = response.data.id
               this.selectedServers.forEach((server) => {
                 const serverId = server.id
-                axios
+                this.$http
                   .put(
                     `http://localhost:8080/api/v1/databases/${DbID}/server/link/${serverId}`,
                     this.responseDatabase,
@@ -152,13 +152,12 @@ export default {
       // Check if required fields are empty
       for (const field of this.formFields) {
         if (field.required && !this.formData[field.name]) {
-          
           const errorMessage = `<div class="alert alert-danger" role="alert" >
       <span class="alert-icon"><span class="visually-hidden">Warning</span></span>
       <p style="font-weight:500; height:8px;">${field.label} is required</p>
-    </div>`;
-      document.getElementById('errorContainerDB').innerHTML = errorMessage;
-          
+    </div>`
+          document.getElementById('errorContainerDB').innerHTML = errorMessage
+
           return false
         }
       }

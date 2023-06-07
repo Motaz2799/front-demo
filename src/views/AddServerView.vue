@@ -59,7 +59,7 @@
 </template>
 
 <script>
-import axios from 'axios'
+//import this.$http from 'this.$http'
 import ComboBox from '../components/ComboBox.vue'
 import Navbar from '../components/Navbar.vue'
 import Footer from '../components/Footer.vue'
@@ -101,7 +101,7 @@ export default {
     }
   },
   created() {
-    axios.get('http://localhost:8080/api/v1/environments/non-archived').then((response) => {
+    this.$http.get('http://localhost:8080/api/v1/environments/non-archived').then((response) => {
       const Environments = response.data.map((environment) => {
         return {
           id: environment.id,
@@ -110,7 +110,7 @@ export default {
       })
       this.environments = Environments
     }),
-      axios.get('http://localhost:8080/api/v1/datacenters/non-archived').then((response) => {
+      this.$http.get('http://localhost:8080/api/v1/datacenters/non-archived').then((response) => {
         const DCs = response.data.map((datacenter) => {
           return {
             id: datacenter.id,
@@ -131,10 +131,10 @@ export default {
     envDcAdd(resp, dcId, envId) {
       return new Promise((resolve) => {
         if (dcId && envId) {
-          axios
+          this.$http
             .put(`http://localhost:8080/api/v1/servers/${resp}/datacenter/link/${dcId}`)
             .then(() => {
-              axios
+              this.$http
                 .put(`http://localhost:8080/api/v1/servers/${resp}/environment/link/${envId}`)
                 .then(() => {
                   resolve()
@@ -143,11 +143,11 @@ export default {
             })
             .catch(console.error)
         } else if (dcId) {
-          axios
+          this.$http
             .put(`http://localhost:8080/api/v1/servers/${resp}/datacenter/link/${dcId}`)
             .catch(console.error)
         } else if (envId) {
-          axios
+          this.$http
             .put(`http://localhost:8080/api/v1/servers/${resp}/environment/link/${envId}`)
             .catch(console.error)
         } else {
@@ -157,43 +157,42 @@ export default {
         }
       })
     },
-    submitFormServer(){
-      if (this.submitForm() == true)  {
+    submitFormServer() {
+      if (this.submitForm() == true) {
         this.responseServer = JSON.stringify(this.formData)
 
-      axios
-        .post('http://localhost:8080/api/v1/servers', this.responseServer, {
-          headers: {
-            'Content-Type': 'application/json'
-          }
-        })
-        .then((response) => {
-          this.envDcAdd(response.data.id, this.selectedDataCenter.id, this.selectedEnvironment.id)
-            .then(() => {
-              alert('Resource created successfully!')
-              window.location.reload()
-            })
-            .catch((error) => {
-              console.error(error)
-            })
-        })
-        .catch((error) => {
-          console.error(error)
-        })
+        this.$http
+          .post('http://localhost:8080/api/v1/servers', this.responseServer, {
+            headers: {
+              'Content-Type': 'application/json'
+            }
+          })
+          .then((response) => {
+            this.envDcAdd(response.data.id, this.selectedDataCenter.id, this.selectedEnvironment.id)
+              .then(() => {
+                alert('Resource created successfully!')
+                window.location.reload()
+              })
+              .catch((error) => {
+                console.error(error)
+              })
+          })
+          .catch((error) => {
+            console.error(error)
+          })
       }
-      },
+    },
 
-      submitForm() {
+    submitForm() {
       // Check if required fields are empty
       for (const field of this.formFields) {
         if (field.required && !this.formData[field.name]) {
-          
           const errorMessage = `<div class="alert alert-danger" role="alert" >
       <span class="alert-icon"><span class="visually-hidden">Warning</span></span>
       <p style="font-weight:500; height:8px;">${field.label} is required</p>
-    </div>`;
-      document.getElementById('errorContainerServer').innerHTML = errorMessage;
-          
+    </div>`
+          document.getElementById('errorContainerServer').innerHTML = errorMessage
+
           return false
         }
       }

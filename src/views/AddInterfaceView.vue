@@ -68,7 +68,7 @@
 <script>
 import Navbar from '@/components/Navbar.vue'
 import Footer from '@/components/Footer.vue'
-import axios from 'axios'
+//import this.$http from 'this.$http'
 import ComboBox from '../components/ComboBox.vue'
 
 export default {
@@ -154,7 +154,7 @@ export default {
     }
   },
   created() {
-    axios.get('http://localhost:8080/api/v1/applications/all').then((response) => {
+    this.$http.get('http://localhost:8080/api/v1/applications/all').then((response) => {
       const Applications = response.data.map((application) => {
         return {
           id: application.id,
@@ -171,13 +171,12 @@ export default {
       // Check if required fields are empty
       for (const field of this.formFields) {
         if (field.required && !this.formData[field.name]) {
-          
           const errorMessage = `<div class="alert alert-danger" role="alert" >
       <span class="alert-icon"><span class="visually-hidden">Warning</span></span>
       <p style="font-weight:500; height:8px;">${field.label} is required</p>
-    </div>`;
-      document.getElementById('errorInterface').innerHTML = errorMessage;
-          
+    </div>`
+          document.getElementById('errorInterface').innerHTML = errorMessage
+
           return false
         }
       }
@@ -192,33 +191,32 @@ export default {
       this.applicationsSource = this.applications.filter((app) => app.id !== selectedOption.id)
     },
     submitInterfaces() {
-      if(this.submitForm()){
-        axios
-        .post('http://localhost:8080/api/v1/interfaces', {
-          applicationSrc: {
-            id: this.selectedAppSrc
-          },
-          applicationTarget: {
-            id: this.selectedAppTarget
-          },
-          protocol: this.formData.protocol,
-          dataFormat: this.formData.dataFormat,
-          notes: this.formData.notes,
-          flow: this.formData.flow,
-          processingMode: this.formData.processingMode,
-          frequency: this.formData.frequency
-        })
-        .then((response) => {
-          console.log(response.data)
-          alert('Resource created successfully!')
-          window.location.reload()
-        })
-        .catch((error) => {
-          // handle error response
-          console.log(error.response.data)
-        })
+      if (this.submitForm()) {
+        this.$http
+          .post('http://localhost:8080/api/v1/interfaces', {
+            applicationSrc: {
+              id: this.selectedAppSrc
+            },
+            applicationTarget: {
+              id: this.selectedAppTarget
+            },
+            protocol: this.formData.protocol,
+            dataFormat: this.formData.dataFormat,
+            notes: this.formData.notes,
+            flow: this.formData.flow,
+            processingMode: this.formData.processingMode,
+            frequency: this.formData.frequency
+          })
+          .then((response) => {
+            console.log(response.data)
+            alert('Resource created successfully!')
+            window.location.reload()
+          })
+          .catch((error) => {
+            // handle error response
+            console.log(error.response.data)
+          })
       }
-      
     }
   }
 }

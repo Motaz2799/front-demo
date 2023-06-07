@@ -87,7 +87,7 @@
 <script>
 import Navbar from '@/components/Navbar.vue'
 import Footer from '@/components/Footer.vue'
-import axios from 'axios'
+//import this.$http from 'this.$http'
 import ComboBox from '../components/ComboBox.vue'
 
 export default {
@@ -183,7 +183,7 @@ export default {
   methods: {
     loadData(id) {
       if (id !== 0) {
-        axios.get('http://localhost:8080/api/v1/applications/all').then((response) => {
+        this.$http.get('http://localhost:8080/api/v1/applications/all').then((response) => {
           const apps = response.data.map((application) => {
             return {
               id: application.id,
@@ -201,7 +201,7 @@ export default {
           )
         })
 
-        axios
+        this.$http
           .get(`${this.endpoint}/${id}`)
           .then((response) => {
             this.formData = response.data
@@ -225,52 +225,49 @@ export default {
       // Check if required fields are empty
       for (const field of this.formFields) {
         if (field.required && !this.formData[field.name]) {
-          
           const errorMessage = `<div class="alert alert-danger" role="alert" >
       <span class="alert-icon"><span class="visually-hidden">Warning</span></span>
       <p style="font-weight:500; height:8px;">${field.label} is required</p>
-    </div>`;
-      document.getElementById('errorInterfaceEdit').innerHTML = errorMessage;
-          
+    </div>`
+          document.getElementById('errorInterfaceEdit').innerHTML = errorMessage
+
           return false
         }
       }
       return true
     },
     submitFormInterface() {
-     if(this.submitForm()){
-      const idsrc = this.selectedAppSrc
-      const idtarget = this.selectedAppTarget
-      const protocol = this.formData.protocol
-      const dataFormat = this.formData.dataFormat
-      const notes = this.formData.notes
-      const flow = this.formData.flow
-      const frequency = this.formData.frequency
-      const processingMode = this.formData.processingMode
-      const x = {
-        applicationSrc: idsrc.id ? { id: idsrc.id } : { id: idsrc },
-        applicationTarget: idtarget.id ? { id: idtarget.id } : { id: idtarget },
-        protocol: protocol,
-        dataFormat: dataFormat,
-        notes: notes,
-        flow: flow,
-        frequency: frequency,
-        processingMode: processingMode
+      if (this.submitForm()) {
+        const idsrc = this.selectedAppSrc
+        const idtarget = this.selectedAppTarget
+        const protocol = this.formData.protocol
+        const dataFormat = this.formData.dataFormat
+        const notes = this.formData.notes
+        const flow = this.formData.flow
+        const frequency = this.formData.frequency
+        const processingMode = this.formData.processingMode
+        const x = {
+          applicationSrc: idsrc.id ? { id: idsrc.id } : { id: idsrc },
+          applicationTarget: idtarget.id ? { id: idtarget.id } : { id: idtarget },
+          protocol: protocol,
+          dataFormat: dataFormat,
+          notes: notes,
+          flow: flow,
+          frequency: frequency,
+          processingMode: processingMode
+        }
+        this.$http
+          .put(`${this.endpoint}/${this.idInterface}`, x)
+          .then((response) => {
+            console.log(response.data)
+            alert('Interface' + this.formData + 'has been updated')
+            window.location.reload()
+            this.$router.push({ path: '/interfaces' })
+          })
+          .catch((error) => {
+            console.log(error)
+          })
       }
-      axios
-        .put(`${this.endpoint}/${this.idInterface}`, x)
-        .then((response) => {
-          console.log(response.data)
-          alert('Interface' + this.formData + 'has been updated')
-          window.location.reload()
-          this.$router.push({ path: '/interfaces' })
-        })
-        .catch((error) => {
-          console.log(error)
-        })
-     }
-
-      
     },
     onSourceAppSelected(selectedOption) {
       this.selectedAppSrc = selectedOption.id

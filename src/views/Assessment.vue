@@ -105,7 +105,7 @@
 </template>
 
 <script>
-import axios from 'axios'
+//import this.$http from 'this.$http'
 import AssessmentForm from '@/components/AssessmentForm.vue'
 import Footer from '@/components/Footer.vue'
 import Navbar from '@/components/Navbar.vue'
@@ -146,15 +146,15 @@ export default {
   },
   methods: {
     async fetchAssessments() {
-      const response = await axios.get(`http://localhost:8080/api/v1/assessments`)
+      const response = await this.$http.get(`http://localhost:8080/api/v1/assessments`)
       this.assessments = response.data
       console.log(response.data)
     },
     async fetchSteps(id) {
       try {
-        const response = await axios.get(`http://localhost:8080/api/v1/applications/${id}`)
+        const response = await this.$http.get(`http://localhost:8080/api/v1/applications/${id}`)
         this.currentAppName = response.data.appName
-        const response1 = await axios.get(
+        const response1 = await this.$http.get(
           `http://localhost:8080/api/v1/applications/${id}/assessment`
         )
         if (!response1.data) {
@@ -187,7 +187,7 @@ export default {
     },
     LinkAssessment(id) {
       const url = `http://localhost:8080/api/v1/applications/${this.$route.params.id}/addAssessment/${id}`
-      axios.post(url).catch((error) => console.error(error))
+      this.$http.post(url).catch((error) => console.error(error))
 
       this.assessmentExist = true
       window.location.reload()

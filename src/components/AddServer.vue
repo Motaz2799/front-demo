@@ -58,7 +58,7 @@
 </template>
 
 <script>
-import axios from 'axios'
+//import this.$http from 'this.$http'
 import ComboBox from './ComboBox.vue'
 
 export default {
@@ -96,7 +96,7 @@ export default {
     }
   },
   created() {
-    axios.get('http://localhost:8080/api/v1/environments/non-archived').then((response) => {
+    this.$http.get('http://localhost:8080/api/v1/environments/non-archived').then((response) => {
       const Environments = response.data.map((environment) => {
         return {
           id: environment.id,
@@ -105,7 +105,7 @@ export default {
       })
       this.environments = Environments
     }),
-      axios.get('http://localhost:8080/api/v1/datacenters/non-archived').then((response) => {
+      this.$http.get('http://localhost:8080/api/v1/datacenters/non-archived').then((response) => {
         const DCs = response.data.map((datacenter) => {
           return {
             id: datacenter.id,
@@ -126,10 +126,10 @@ export default {
     envDcAdd(resp, dcId, envId) {
       return new Promise((resolve) => {
         if (dcId && envId) {
-          axios
+          this.$http
             .put(`http://localhost:8080/api/v1/servers/${resp}/datacenter/link/${dcId}`)
             .then(() => {
-              axios
+              this.$http
                 .put(`http://localhost:8080/api/v1/servers/${resp}/environment/link/${envId}`)
                 .then(() => {
                   resolve()
@@ -138,11 +138,11 @@ export default {
             })
             .catch(console.error)
         } else if (dcId) {
-          axios
+          this.$http
             .put(`http://localhost:8080/api/v1/servers/${resp}/datacenter/link/${dcId}`)
             .catch(console.error)
         } else if (envId) {
-          axios
+          this.$http
             .put(`http://localhost:8080/api/v1/servers/${resp}/environment/link/${envId}`)
             .catch(console.error)
         } else {
@@ -164,7 +164,7 @@ export default {
 
       this.responseServer = JSON.stringify(this.formData)
 
-      axios
+      this.$http
         .post('http://localhost:8080/api/v1/servers', this.responseServer, {
           headers: {
             'Content-Type': 'application/json'
@@ -173,7 +173,7 @@ export default {
         .then((response) => {
           this.envDcAdd(response.data.id, this.selectedDataCenter.id, this.selectedEnvironment.id)
             .then(() => {
-              axios
+              this.$http
                 .put(
                   `http://localhost:8080/api/v1/applications/${this.appId}/server/link2/${response.data.id}`,
 

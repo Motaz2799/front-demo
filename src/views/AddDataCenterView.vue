@@ -50,7 +50,7 @@
 <script>
 import Navbar from '@/components/Navbar.vue'
 import Footer from '@/components/Footer.vue'
-import axios from 'axios'
+//import this.$http from 'this.$http'
 
 export default {
   components: {
@@ -76,13 +76,12 @@ export default {
       // Check if required fields are empty
       for (const field of this.formFields) {
         if (field.required && !this.formData[field.name]) {
-          
           const errorMessage = `<div class="alert alert-danger" role="alert" >
       <span class="alert-icon"><span class="visually-hidden">Warning</span></span>
       <p style="font-weight:500; height:8px;">${field.label} is required</p>
-    </div>`;
-      document.getElementById('errorDC').innerHTML = errorMessage;
-          
+    </div>`
+          document.getElementById('errorDC').innerHTML = errorMessage
+
           return false
         }
       }
@@ -92,7 +91,7 @@ export default {
       if (this.submitForm() == true) {
         this.responseDataCenter = JSON.stringify(this.formData)
 
-        axios
+        this.$http
           .post('http://localhost:8080/api/v1/datacenters', this.responseDataCenter, {
             headers: {
               'Content-Type': 'application/json'

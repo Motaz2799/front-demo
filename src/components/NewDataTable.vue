@@ -1,14 +1,14 @@
 <template>
-  <div >
+  <div>
     <table class="table table-responsive table-hover">
       <thead>
         <tr>
-          <th v-for="header in headers" :key="header" >{{ header.label }}</th>
+          <th v-for="header in headers" :key="header">{{ header.label }}</th>
         </tr>
       </thead>
       <tbody>
         <tr v-for="item in paginatedItems" :key="item.id">
-          <td v-for="header in headers" :key="header.name" >
+          <td v-for="header in headers" :key="header.name">
             <template v-if="header.name === 'environment'">
               <template v-if="item[header.name]">
                 {{ item[header.name].environmentName }}
@@ -52,13 +52,19 @@
           </td>
           <td>
             <div class="btn-group">
-            <button class="btn btn-secondary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-              Actions
-            </button>
-            <ul class="dropdown-menu ">
-              <li><a class="dropdown-item" @click="removeItem(item.id)">Remove </a></li>
-            </ul>
-          </div></td>
+              <button
+                class="btn btn-secondary btn-sm dropdown-toggle"
+                type="button"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+              >
+                Actions
+              </button>
+              <ul class="dropdown-menu">
+                <li><a class="dropdown-item" @click="removeItem(item.id)">Remove </a></li>
+              </ul>
+            </div>
+          </td>
         </tr>
       </tbody>
     </table>
@@ -67,7 +73,12 @@
         <li class="page-item" :class="{ disabled: page === 1 }">
           <a class="page-link" href="#" @click.prevent="changePage(page - 1)">Previous</a>
         </li>
-        <li v-for="pageNumber in totalPages" :key="pageNumber" class="page-item" :class="{ active: pageNumber === page }">
+        <li
+          v-for="pageNumber in totalPages"
+          :key="pageNumber"
+          class="page-item"
+          :class="{ active: pageNumber === page }"
+        >
           <a class="page-link" href="#" @click.prevent="changePage(pageNumber)">{{ pageNumber }}</a>
         </li>
         <li class="page-item" :class="{ disabled: page === totalPages }">
@@ -138,7 +149,7 @@
 </template>
 
 <script>
-import axios from 'axios'
+//import this.$http from 'this.$http'
 import Combobox from './ComboBox.vue'
 
 export default {
@@ -146,7 +157,7 @@ export default {
     Combobox
   },
   props: {
-    appId:Number,
+    appId: Number,
     headers: {
       type: Array,
       required: true
@@ -181,59 +192,61 @@ export default {
   },
   computed: {
     paginatedItems() {
-      return this.paginateItems();
+      return this.paginateItems()
     },
     totalPages() {
-      return Math.ceil(this.items.length / this.pageSize);
-    },
+      return Math.ceil(this.items.length / this.pageSize)
+    }
   },
 
   methods: {
     paginateItems() {
-      const startIndex = (this.page - 1) * this.pageSize;
-      const endIndex = startIndex + this.pageSize;
-      return this.items.slice(startIndex, endIndex);
+      const startIndex = (this.page - 1) * this.pageSize
+      const endIndex = startIndex + this.pageSize
+      return this.items.slice(startIndex, endIndex)
     },
     changePage(pageNumber) {
       if (pageNumber >= 1) {
-        this.page = pageNumber;
+        this.page = pageNumber
       } else {
-        this.page = 1;
+        this.page = 1
       }
     },
-    removeItem(idRessource){
-      if(this.apiUrl.includes('servers')){
-      const confirmed = window.confirm('Are you sure you want to delete this resource?')
-      if (!confirmed) {
-        return
-      }
-      axios
-        .put(`http://localhost:8080/api/v1/applications/${this.appId}/server/unlink/${idRessource}`)
-        .then(() => {
-          window.location.reload()
-        })
-        .catch((error) => {
-          console.error(error)
-        })}
-      else if (this.apiUrl.includes('interfaces')){
-      const confirmed = window.confirm('Are you sure you want to delete this resource?')
-      if (!confirmed) {
-        return
-      }
-        axios
-        .delete(`http://localhost:8080/api/v1/interfaces/${idRessource}`)
-        .then(() => {
-          window.location.reload()
-        })
-        .catch((error) => {
-          console.error(error)
-        })
+    removeItem(idRessource) {
+      if (this.apiUrl.includes('servers')) {
+        const confirmed = window.confirm('Are you sure you want to delete this resource?')
+        if (!confirmed) {
+          return
+        }
+        this.$http
+          .put(
+            `http://localhost:8080/api/v1/applications/${this.appId}/server/unlink/${idRessource}`
+          )
+          .then(() => {
+            window.location.reload()
+          })
+          .catch((error) => {
+            console.error(error)
+          })
+      } else if (this.apiUrl.includes('interfaces')) {
+        const confirmed = window.confirm('Are you sure you want to delete this resource?')
+        if (!confirmed) {
+          return
+        }
+        this.$http
+          .delete(`http://localhost:8080/api/v1/interfaces/${idRessource}`)
+          .then(() => {
+            window.location.reload()
+          })
+          .catch((error) => {
+            console.error(error)
+          })
       }
     },
     addEnv(id) {
       this.serverID = id
       console.log(id)
-      axios.get('http://localhost:8080/api/v1/environments/all').then((response) => {
+      this.$http.get('http://localhost:8080/api/v1/environments/all').then((response) => {
         const Environments = response.data.map((environment) => {
           return {
             id: environment.id,
@@ -246,7 +259,7 @@ export default {
     addDc(id) {
       this.serverID = id
       console.log(id)
-      axios.get('http://localhost:8080/api/v1/datacenters/all').then((response) => {
+      this.$http.get('http://localhost:8080/api/v1/datacenters/all').then((response) => {
         const DCs = response.data.map((datacenter) => {
           return {
             id: datacenter.id,
@@ -257,7 +270,7 @@ export default {
       })
     },
     fetchItems() {
-      axios
+      this.$http
         .get(this.apiUrl)
         .then((response) => {
           this.items = response.data
@@ -274,7 +287,7 @@ export default {
       this.datacenterToAdd = Dc.id
     },
     AddEnvironment() {
-      axios
+      this.$http
         .put(
           `http://localhost:8080/api/v1/servers/${this.serverID}/environment/link/${this.environmentToAdd}`
         )
@@ -282,13 +295,13 @@ export default {
       window.location.reload()
     },
     AddDatacenter() {
-      axios
+      this.$http
         .put(
           `http://localhost:8080/api/v1/servers/${this.serverID}/datacenter/link/${this.datacenterToAdd}`
         )
         .catch(console.error)
       window.location.reload()
-    },
+    }
   }
 }
 </script>
@@ -300,5 +313,4 @@ export default {
 .wide-column {
   display: flex;
 }
-
 </style>

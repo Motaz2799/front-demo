@@ -50,7 +50,7 @@
 <script>
 import Navbar from '@/components/Navbar.vue'
 import Footer from '@/components/Footer.vue'
-import axios from 'axios'
+//import this.$http from 'this.$http'
 
 export default {
   components: {
@@ -91,13 +91,12 @@ export default {
       // Check if required fields are empty
       for (const field of this.formFields) {
         if (field.required && !this.formData[field.name]) {
-          
           const errorMessage = `<div class="alert alert-danger" role="alert" >
       <span class="alert-icon"><span class="visually-hidden">Warning</span></span>
       <p style="font-weight:500; height:8px;">${field.label} is required</p>
-    </div>`;
-      document.getElementById('errorENV').innerHTML = errorMessage;
-          
+    </div>`
+          document.getElementById('errorENV').innerHTML = errorMessage
+
           return false
         }
       }
@@ -108,23 +107,22 @@ export default {
       if (this.submitForm()) {
         this.responseEnvironments = JSON.stringify(this.formData)
 
-      axios
-        .post('http://localhost:8080/api/v1/environments', this.responseEnvironments, {
-          headers: {
-            'Content-Type': 'application/json'
-          }
-        })
-        .then((response) => {
-          console.log(response.data)
-          alert('Resource created successfully!')
-          window.location.reload()
-          this.$router.push('/environments')
-        })
-        .catch((error) => {
-          console.error(error)
-        })
+        this.$http
+          .post('http://localhost:8080/api/v1/environments', this.responseEnvironments, {
+            headers: {
+              'Content-Type': 'application/json'
+            }
+          })
+          .then((response) => {
+            console.log(response.data)
+            alert('Resource created successfully!')
+            window.location.reload()
+            this.$router.push('/environments')
+          })
+          .catch((error) => {
+            console.error(error)
+          })
       }
-      
     }
   }
 }

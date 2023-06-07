@@ -48,7 +48,7 @@
 <script>
 import Navbar from '@/components/Navbar.vue'
 import Footer from '@/components/Footer.vue'
-import axios from 'axios'
+//import this.$http from 'this.$http'
 
 const FORM_CONFIGS = {
   environmentView: [
@@ -106,7 +106,7 @@ export default {
   methods: {
     loadData(idEnv) {
       if (idEnv !== 0) {
-        axios
+        this.$http
           .get(`${this.endpoint}/${idEnv}`)
           .then((response) => {
             this.formData = response.data
@@ -120,13 +120,12 @@ export default {
       // Check if required fields are empty
       for (const field of this.formFields) {
         if (field.required && !this.formData[field.name]) {
-          
           const errorMessage = `<div class="alert alert-danger" role="alert" >
       <span class="alert-icon"><span class="visually-hidden">Warning</span></span>
       <p style="font-weight:500; height:8px;">${field.label} is required</p>
-    </div>`;
-      document.getElementById('errorENVEdit').innerHTML = errorMessage;
-          
+    </div>`
+          document.getElementById('errorENVEdit').innerHTML = errorMessage
+
           return false
         }
       }
@@ -134,21 +133,19 @@ export default {
     },
     submitFormENV() {
       // Check if required fields are empty
-      if(this.submitForm()){
-        axios
-        .put(`${this.endpoint}/${this.idEnv}`, this.formData)
-        .then((response) => {
-          console.log(response.data)
-          alert('Environment' + this.formData.environmentName + 'has been updated')
-          window.location.reload()
-          this.$router.push({ path: '/environments' })
-        })
-        .catch((error) => {
-          console.log(error)
-        })
+      if (this.submitForm()) {
+        this.$http
+          .put(`${this.endpoint}/${this.idEnv}`, this.formData)
+          .then((response) => {
+            console.log(response.data)
+            alert('Environment' + this.formData.environmentName + 'has been updated')
+            window.location.reload()
+            this.$router.push({ path: '/environments' })
+          })
+          .catch((error) => {
+            console.log(error)
+          })
       }
-
-      
     }
   }
 }

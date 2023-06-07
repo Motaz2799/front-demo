@@ -1,5 +1,6 @@
 import { createApp } from 'vue'
 import App from './App.vue'
+
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from './views/HomeView.vue'
 import ApplicationsView from './views/ApplicationsView.vue'
@@ -29,6 +30,8 @@ import Assessment from './views/Assessment.vue'
 import MainDashboard from './views/MainDashboard.vue'
 import AddServer from './components/AddServer.vue'
 import AddServerView from './views/AddServerView.vue'
+import ForbiddenComponent from './views/ForbiddenComponent.vue'
+import axios from 'axios'
 
 const router = createRouter({
   history: createWebHistory(),
@@ -41,7 +44,7 @@ const router = createRouter({
     { path: '/servers', component: ServersView },
     { path: '/contacts', component: ContactView },
     { path: '/databases', component: DatabaseView },
-    { path: '/servers/add', component: AddServerView, props: true, name: 'AddServerView'},
+    { path: '/servers/add', component: AddServerView, props: true, name: 'AddServerView' },
 
     { path: '/interfaces', component: InterfacesView, name: 'interfaceView' },
     { path: '/applications/:id', component: MainDashboard, name: 'MainDashboard' },
@@ -124,11 +127,40 @@ const router = createRouter({
       name: 'AddEnvironmentView'
     },
 
-    { path: '/Upload', component: UploadExcel }
+    { path: '/Upload', component: UploadExcel },
+    { path: '/403', component: ForbiddenComponent }, // Add the ForbiddenComponent route
+    { path: '/:pathMatch(.*)', redirect: '/403' }, // Redirect all unmatched routes to /403
   ]
+  
 })
 
+
+axios.interceptors.request.use((config) => {
+  const token = localStorage.getItem('token');
+  if (token) {
+    config.headers['Authorization'] = `Bearer ${token}`;
+  }
+  return config;
+}, (error) => {
+  return Promise.reject(error);
+});
+
+router.beforeEach((to, from, next) => {
+  const token = localStorage.getItem('token');
+  if (to.path === '/') {
+    // Allow access to the login page
+    next();
+  } else if (!token && to.path !== '/403') {
+    // Redirect to /403 if token doesn't exist
+    next('/403');
+  } else {
+    next();
+  }
+});
+
+
 const app = createApp(App)
+app.config.globalProperties.$http = axios;
 app.use(router)
 
 app.mount('#app')

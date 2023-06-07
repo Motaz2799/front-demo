@@ -67,7 +67,7 @@
 </template>
 
 <script>
-import axios from 'axios'
+//import this.$http from 'this.$http'
 import ComboBox from './ComboBox.vue'
 
 export default {
@@ -150,7 +150,7 @@ export default {
     }
   },
   created() {
-    axios
+    this.$http
       .get(`http://localhost:8080/api/v1/applications/interfaces/custom-add/${this.appId}`)
       .then((response) => {
         const apps = response.data.map((application) => {
@@ -188,7 +188,7 @@ export default {
         }
       }
 
-      axios.post('http://localhost:8080/api/v1/interfaces', {
+      this.$http.post('http://localhost:8080/api/v1/interfaces', {
         applicationSrc: {
           id: this.selectedAppSrc
         },
